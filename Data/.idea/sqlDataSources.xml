@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="c1e248bb-1020-47c6-9025-89bc92d93daf" />
+          <option name="name" value="postgres@localhost [2] (DDL)" />
+          <option name="languageId" value="PostgreSQL" />
+          <option name="urls">
+            <array>
+              <option value="file://$PROJECT_DIR$/AddDataBase/public/Category.sql" />
+              <option value="file://$PROJECT_DIR$/AddDataBase/public/Check.sql" />
+              <option value="file://$PROJECT_DIR$/AddDataBase/public/Customer_card.sql" />
+              <option value="file://$PROJECT_DIR$/AddDataBase/public/Employee.sql" />
+              <option value="file://$PROJECT_DIR$/AddDataBase/public/Product.sql" />
+              <option value="file://$PROJECT_DIR$/AddDataBase/public/Sale.sql" />
+              <option value="file://$PROJECT_DIR$/AddDataBase/public/Store_Product.sql" />
+            </array>
+          </option>
+        </State>
+      </list>
+    </option>
+  </component>
+</project>
