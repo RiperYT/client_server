@@ -1,0 +1,1 @@
+docker run -d --name zlagoda --restart always -p 5601:5432 -e POSTGRES_PASSWORD=password -e POSTGRES_USER=zlagoda_admin -e POSTGRES_HOST_AUTH_METHOD=trust postgres:12
