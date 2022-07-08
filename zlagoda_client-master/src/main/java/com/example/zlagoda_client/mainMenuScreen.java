@@ -32,7 +32,7 @@ public class mainMenuScreen {
     private String[] columnNamesEmp = {"ID number", "surname", "name", "father's name", "occupation", "salary", "start Date", "birth Date", "phone", "city", "street", "index"};
 
 
-    mainMenuScreen(int id){
+    mainMenuScreen(){
 
         buttonPanel.add(catButton);
         buttonPanel.add(proButton);
@@ -50,10 +50,6 @@ public class mainMenuScreen {
 
         scroller.add(dbVisualiser);
         mainScreen.add(scroller);
-
-        if (id == 2){
-            empButton.setEnabled(false);
-        }
     }
 
     /*
