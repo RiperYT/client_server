@@ -1,8 +1,3 @@
-package com.example.demo.Dtos;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,7 +33,7 @@ public class EmployeeDto extends BaseDto{
         this.city = city;
         this.street = street;
         this.zip_code = zip_code;
-        this.passwordEmployee = null;
+        this.passwordEmployee = password;
     }
 
     public String getId_employee() {

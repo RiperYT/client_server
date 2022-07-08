@@ -1,7 +1,3 @@
-package com.example.demo.Dtos;
-
-import org.apache.commons.codec.digest.DigestUtils;
-
 public class BaseDto {
     private String login;
     private String password;
