@@ -2,24 +2,37 @@ package com.example.demo.Controllers;
 
 import com.example.demo.Dtos.BaseDto;
 import com.example.demo.Dtos.EmployeeDto;
+import com.example.demo.Repositories.EmployeeRepository;
 import com.example.demo.Services.AuthenticationService;
 import com.example.demo.Services.AuthorizationService;
 import com.example.demo.Services.EmployeeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
-public class LoginController {
+public class EmployeeController {
 
+    private final EmployeeService employeeService;
+    private final AuthorizationService authorizationService;
+    private final AuthenticationService authenticationService;
+    public EmployeeController(){
+        this.employeeService = new EmployeeService(new EmployeeRepository());
+        this.authorizationService = new AuthorizationService(new EmployeeRepository());
+        this.authenticationService = new AuthenticationService(new EmployeeRepository());
+    }
+
+    //TODO
     @PostMapping("/delete")
     public ResponseEntity deleteUser(@RequestBody String str) {
         try{
             EmployeeDto baseDto = new ObjectMapper().readValue(str, EmployeeDto.class);
-            if(new AuthorizationService().AuthorizationManager(baseDto.getLogin(), baseDto.getPassword())) {
-                if (new EmployeeService().deleteEmployee(baseDto))
+            if(authorizationService.AuthorizationManager(baseDto.getLogin(), baseDto.getPassword())) {
+                if (employeeService.deleteEmployee(baseDto))
                     return ResponseEntity.ok("true");
                 else
                     return ResponseEntity.ok("ErrorEdit");
@@ -31,12 +44,13 @@ public class LoginController {
         }
     }
 
+    //TODO
     @PostMapping("/update")
     public ResponseEntity editUser(@RequestBody String str) {
         try{
             EmployeeDto baseDto = new ObjectMapper().readValue(str, EmployeeDto.class);
-            if(new AuthorizationService().AuthorizationManager(baseDto.getLogin(), baseDto.getPassword())) {
-                if (new EmployeeService().editEmployee(baseDto))
+            if(authorizationService.AuthorizationManager(baseDto.getLogin(), baseDto.getPassword())) {
+                if (employeeService.editEmployee(baseDto))
                     return ResponseEntity.ok("true");
                 else
                     return ResponseEntity.ok("ErrorUpdate");
@@ -48,63 +62,66 @@ public class LoginController {
         }
     }
 
+    
+    //ready
     @PostMapping("/add")
-    public ResponseEntity addUser(@RequestBody String str) {
+    public ResponseEntity addUser(@RequestBody String str) throws JsonProcessingException {
         try{
             EmployeeDto baseDto = new ObjectMapper().readValue(str, EmployeeDto.class);
-            if(new AuthorizationService().AuthorizationManager(baseDto.getLogin(), baseDto.getPassword())) {
-                if (new EmployeeService().addEmployee(baseDto))
-                    return ResponseEntity.ok("true");
+            if(authorizationService.AuthorizationManager(baseDto.getLogin(), baseDto.getPassword())) {
+                if (employeeService.addEmployee(baseDto))
+                    return ResponseEntity.ok("TrueAdd");
                 else
                     return ResponseEntity.ok("ErrorAdd");
             }
             else
-                return ResponseEntity.ok("false");
+                return ResponseEntity.ok("ErrorAuthorization");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
         }
     }
 
+    //TODO
     @PostMapping("/getAllEmployee")
     public ResponseEntity getAllEmployee(@RequestBody String str) {
         try{
             BaseDto baseDto = new ObjectMapper().readValue(str, BaseDto.class);
-            AuthorizationService service = new AuthorizationService();
-            if(service.AuthorizationCashier(baseDto.getLogin(), baseDto.getPassword())
-                    || service.AuthorizationManager(baseDto.getLogin(), baseDto.getPassword()))
-                return ResponseEntity.ok(new JSONObject(new EmployeeService().getAll()).toString());
+            if(authorizationService.AuthorizationCashier(baseDto.getLogin(), baseDto.getPassword())
+                    || authorizationService.AuthorizationManager(baseDto.getLogin(), baseDto.getPassword()))
+                return ResponseEntity.ok(new JSONObject(employeeService.getAll()).toString());
             else
-                return ResponseEntity.ok("false");
+                return ResponseEntity.ok("ErrorAuthorization");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
         }
     }
 
+    //ready
     @PostMapping("/getInfo")
     public ResponseEntity getInfo(@RequestBody String str) {
         try{
             BaseDto baseDto = new ObjectMapper().readValue(str, BaseDto.class);
-            AuthorizationService service = new AuthorizationService();
-            if(service.AuthorizationCashier(baseDto.getLogin(), baseDto.getPassword())
-                    || service.AuthorizationManager(baseDto.getLogin(), baseDto.getPassword()))
-                return ResponseEntity.ok(new JSONObject(new EmployeeService().getInfoById(baseDto.getLogin())).toString());
+            if(authorizationService.AuthorizationCashier(baseDto.getLogin(), baseDto.getPassword())
+                    || authorizationService.AuthorizationManager(baseDto.getLogin(), baseDto.getPassword()))
+                return ResponseEntity.ok(new JSONObject(employeeService.getInfoById(baseDto.getLogin())).toString());
             else
-                return ResponseEntity.ok("false");
+                return ResponseEntity.ok("ErrorAuthorization");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
         }
     }
 
+    //ready
     @PostMapping("/login")
-    public ResponseEntity postSuccess(@RequestBody String str) {
+    public ResponseEntity login(@RequestBody String str) {
         try{
             BaseDto baseDto = new ObjectMapper().readValue(str, BaseDto.class);
-            if(new AuthenticationService().Authentication(baseDto))
+            if(authenticationService.Authentication(baseDto))
                 return ResponseEntity.ok("true");
             else
                 return ResponseEntity.ok("false");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error");
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

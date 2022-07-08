@@ -1,32 +1,40 @@
 package com.example.demo.Services;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
 import com.example.demo.Dtos.EmployeeDto;
 import com.example.demo.Repositories.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class EmployeeService {
 
+    private final EmployeeRepository employeeRepository;
+    @Autowired
+    public EmployeeService(EmployeeRepository employeeRepository){this.employeeRepository = employeeRepository;}
+
     public EmployeeDto getInfoById(String id){
-        return new EmployeeRepository().infoEmployeeById(id);
+        return employeeRepository.infoEmployeeById(id);
     }
 
     public List<EmployeeDto> getAll(){
-        return new EmployeeRepository().getAll();
+
+        try{ return employeeRepository.getAll(); }
+        catch (Exception e) { throw e; }
     }
 
     public boolean addEmployee(EmployeeDto employeeDto){
         try{
-            new EmployeeRepository().addEmployee(employeeDto);
+            employeeRepository.addEmployee(employeeDto);
             return true;
         }catch (Exception e){
-            return false;
+            throw e;
         }
     }
 
     public boolean editEmployee(EmployeeDto employeeDto){
         try{
-            new EmployeeRepository().editEmployee(employeeDto);
+            employeeRepository.editEmployee(employeeDto);
             return true;
         }catch (Exception e){
             return false;
@@ -35,7 +43,7 @@ public class EmployeeService {
 
     public boolean deleteEmployee(EmployeeDto employeeDto){
         try{
-            new EmployeeRepository().deleteEmployee(employeeDto);
+            employeeRepository.deleteEmployee(employeeDto);
             return true;
         }catch (Exception e){
             return false;

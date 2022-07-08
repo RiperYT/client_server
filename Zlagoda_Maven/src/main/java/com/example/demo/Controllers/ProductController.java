@@ -1,13 +1,15 @@
-package com.example.demo.Controllers;
+/*package com.example.demo.Controllers;
 
 import com.example.demo.Dtos.CategoryDto;
 import com.example.demo.Dtos.ProductDto;
+import com.example.demo.Repositories.EmployeeRepository;
 import com.example.demo.Services.AuthorizationService;
 import com.example.demo.Services.CategoryService;
 import com.example.demo.Services.IService;
 import com.example.demo.Services.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,13 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/product")
 public class ProductController {
     IService service = new ProductService();
+
+    private final AuthorizationService authorizationService;
+
+    public ProductController(AuthorizationService authorizationService){
+        this.authorizationService = new AuthorizationService(new EmployeeRepository());
+    }
+
     @PostMapping("/get")
     public ResponseEntity get(@RequestBody String str)
     {
         try{
             ProductDto dto = new ObjectMapper().readValue(str, ProductDto.class);
-            if(new AuthorizationService().AuthorizationManager(dto.getLogin(), dto.getPassword())
-                    || new AuthorizationService().AuthorizationCashier(dto.getLogin(), dto.getPassword())) {
+            if(authorizationService.AuthorizationManager(dto.getLogin(), dto.getPassword())
+                    || authorizationService.AuthorizationCashier(dto.getLogin(), dto.getPassword())) {
                 return ResponseEntity.ok(new JSONObject(service.get(Integer.toString(dto.getId_product()))).toString());
             }
             else
@@ -38,8 +47,8 @@ public class ProductController {
     {
         try{
             ProductDto dto = new ObjectMapper().readValue(str, ProductDto.class);
-            if(new AuthorizationService().AuthorizationManager(dto.getLogin(), dto.getPassword())
-                    || new AuthorizationService().AuthorizationCashier(dto.getLogin(), dto.getPassword())) {
+            if(authorizationService.AuthorizationManager(dto.getLogin(), dto.getPassword())
+                    || authorizationService.AuthorizationCashier(dto.getLogin(), dto.getPassword())) {
                 return ResponseEntity.ok(new JSONObject(service.getAll()).toString());
             }
             else
@@ -53,7 +62,7 @@ public class ProductController {
     {
         try{
             ProductDto dto = new ObjectMapper().readValue(str, ProductDto.class);
-            if(new AuthorizationService().AuthorizationManager(dto.getLogin(), dto.getPassword())) {
+            if(authorizationService.AuthorizationManager(dto.getLogin(), dto.getPassword())) {
                 if (service.add(dto))
                     return ResponseEntity.ok("true");
                 else
@@ -70,7 +79,7 @@ public class ProductController {
     {
         try{
             ProductDto dto = new ObjectMapper().readValue(str, ProductDto.class);
-            if(new AuthorizationService().AuthorizationManager(dto.getLogin(), dto.getPassword())) {
+            if(authorizationService.AuthorizationManager(dto.getLogin(), dto.getPassword())) {
                 if (service.edit(dto))
                     return ResponseEntity.ok("true");
                 else
@@ -87,7 +96,7 @@ public class ProductController {
     {
         try{
             ProductDto dto = new ObjectMapper().readValue(str, ProductDto.class);
-            if(new AuthorizationService().AuthorizationManager(dto.getLogin(), dto.getPassword())) {
+            if(authorizationService.AuthorizationManager(dto.getLogin(), dto.getPassword())) {
                 if (service.delete(dto))
                     return ResponseEntity.ok("true");
                 else
@@ -100,3 +109,4 @@ public class ProductController {
         }
     }
 }
+*/
